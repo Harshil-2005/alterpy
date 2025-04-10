@@ -1,6 +1,6 @@
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from alterpy.analyzer import Analyzer
+from alterpy.data_analyzer import Analyzer
 import pandas as pd
 
 def test_attendance_percentage():

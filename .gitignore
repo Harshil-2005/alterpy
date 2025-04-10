@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.sqlite3
+*.log
+*.egg-info/
+.DS_Store
+.ipynb_checkpoints/
+pip install -r requirements.txt

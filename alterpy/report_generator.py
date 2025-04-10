@@ -1,45 +1,42 @@
+from datetime import datetime
+
 class ReportGenerator:
     def __init__(self, dataframe):
         self.df = dataframe
 
     def generate_summary(self):
-        return self.df.describe().to_string()
+        return self.df.describe()
 
-    def missing_value_report(self):
-        return self.df.isnull().sum().to_string()
+    def generate_null_report(self):
+        return self.df.isnull().sum()
 
-    def data_types_report(self):
-        return self.df.dtypes.to_string()
+    def generate_dtype_report(self):
+        return self.df.dtypes
 
-    def column_stats(self, column):
-        stats = {
-            'mean': self.df[column].mean(),
-            'median': self.df[column].median(),
-            'mode': self.df[column].mode()[0],
-            'min': self.df[column].min(),
-            'max': self.df[column].max()
+    def generate_shape_report(self):
+        return {'rows': self.df.shape[0], 'columns': self.df.shape[1]}
+
+    def generate_column_report(self, column):
+        return {
+            "unique": self.df[column].nunique(),
+            "top": self.df[column].mode()[0],
+            "nulls": self.df[column].isnull().sum()
         }
-        return stats
 
     def save_to_csv(self, filename):
         self.df.to_csv(filename, index=False)
-        return f"Saved to {filename}"
 
     def save_to_excel(self, filename):
         self.df.to_excel(filename, index=False)
-        return f"Saved to {filename}"
 
-    def to_html_report(self):
-        return self.df.to_html()
+    def generate_timestamped_report(self, prefix="report"):
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{prefix}_{timestamp}.csv"
+        self.df.to_csv(filename, index=False)
+        return filename
 
-    def count_unique_values(self):
-        return self.df.nunique().to_string()
+    def get_memory_usage(self):
+        return self.df.memory_usage(deep=True)
 
-    def generate_correlation_report(self):
-        return self.df.corr().to_string()
-
-    def generate_skew_kurtosis(self):
-        return {
-            'skew': self.df.skew().to_dict(),
-            'kurtosis': self.df.kurtosis().to_dict()
-        }
+    def get_column_distribution(self, column):
+        return self.df[column].value_counts(normalize=True)

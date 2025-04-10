@@ -2,32 +2,32 @@ class Analyzer:
     def __init__(self, dataframe):
         self.df = dataframe
 
-    def describe_data(self):
-        return self.df.describe()
+    def column_mean(self, column):
+        return self.df[column].mean()
 
-    def null_values(self):
-        return self.df.isnull().sum()
+    def column_median(self, column):
+        return self.df[column].median()
+
+    def column_mode(self, column):
+        return self.df[column].mode()
+
+    def column_std(self, column):
+        return self.df[column].std()
+
+    def column_variance(self, column):
+        return self.df[column].var()
+
+    def column_min(self, column):
+        return self.df[column].min()
+
+    def column_max(self, column):
+        return self.df[column].max()
 
     def correlation_matrix(self):
-        return self.df.corr()
+        return self.df.corr(numeric_only=True)
+
+    def count_unique(self, column):
+        return self.df[column].nunique()
 
     def value_counts(self, column):
         return self.df[column].value_counts()
-
-    def get_unique(self, column):
-        return self.df[column].unique()
-
-    def get_mode(self, column):
-        return self.df[column].mode()
-
-    def get_median(self, column):
-        return self.df[column].median()
-
-    def get_mean(self, column):
-        return self.df[column].mean()
-
-    def get_min(self, column):
-        return self.df[column].min()
-
-    def get_max(self, column):
-        return self.df[column].max()
