@@ -1,33 +1,44 @@
+import pandas as pd
+
 class Analyzer:
     def __init__(self, dataframe):
         self.df = dataframe
 
-    def column_mean(self, column):
-        return self.df[column].mean()
+    def attendance_summary(self, status_col='Status'):
+        return self.df[status_col].value_counts()
 
-    def column_median(self, column):
-        return self.df[column].median()
+    def student_attendance_stats(self):
+        return self.df.groupby('Student')['Status'].value_counts().unstack(fill_value=0)
 
-    def column_mode(self, column):
-        return self.df[column].mode()
+    def top_absentees(self, n=5):
+        absents = self.df[self.df['Status'] == 'Absent']
+        return absents['Student'].value_counts().head(n)
 
-    def column_std(self, column):
-        return self.df[column].std()
+    def attendance_by_day(self):
+        return self.df.groupby('Date')['Status'].value_counts().unstack(fill_value=0)
 
-    def column_variance(self, column):
-        return self.df[column].var()
+    def average_attendance_per_day(self):
+        total_per_day = self.df.groupby('Date')['Status'].count()
+        present_per_day = self.df[self.df['Status'] == 'Present'].groupby(self.df['Date']).count()['Status']
+        return (present_per_day / total_per_day) * 100
 
-    def column_min(self, column):
-        return self.df[column].min()
+    def attendance_trend(self):
+        return self.df[self.df['Status'] == 'Present'].groupby('Date').count()['Status']
 
-    def column_max(self, column):
-        return self.df[column].max()
+    def absentee_percentage_by_student(self):
+        summary = self.student_attendance_stats()
+        summary['Total'] = summary.sum(axis=1)
+        summary['AbsentPercentage'] = (summary.get('Absent', 0) / summary['Total']) * 100
+        return summary[['AbsentPercentage']]
 
-    def correlation_matrix(self):
-        return self.df.corr(numeric_only=True)
+    def most_regular_students(self, top_n=5):
+        summary = self.student_attendance_stats()
+        summary['Total'] = summary.sum(axis=1)
+        summary['PresentRate'] = summary.get('Present', 0) / summary['Total']
+        return summary.sort_values(by='PresentRate', ascending=False).head(top_n)
 
-    def count_unique(self, column):
-        return self.df[column].nunique()
-
-    def value_counts(self, column):
-        return self.df[column].value_counts()
+    def most_irregular_students(self, bottom_n=5):
+        summary = self.student_attendance_stats()
+        summary['Total'] = summary.sum(axis=1)
+        summary['PresentRate'] = summary.get('Present', 0) / summary['Total']
+        return summary.sort_values(by='PresentRate', ascending=True).head(bottom_n)

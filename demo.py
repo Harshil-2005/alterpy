@@ -1,26 +1,61 @@
+import pandas as pd
+import os
+import matplotlib.pyplot as plt
 from alterpy.data_loader import DataLoader
 from alterpy.data_processor import DataProcessor
 from alterpy.data_analyzer import Analyzer
-from alterpy.data_visualizer import Visualizer
 from alterpy.report_generator import ReportGenerator
 
+class Visualizer:
+    def __init__(self, df):
+        self.df = df
+
+    def plot_daily_attendance(self, date_col, status_col):
+        plt.figure()
+        daily = self.df.groupby(date_col)[status_col].value_counts().unstack().fillna(0)
+        daily.plot(kind='bar', stacked=True, figsize=(12, 6))
+        plt.title("Daily Attendance")
+        plt.xlabel("Date")
+        plt.ylabel("Count")
+
+    def pie_chart_distribution(self, status_col):
+        plt.figure()
+        counts = self.df[status_col].value_counts()
+        counts.plot(kind='pie', autopct='%1.1f%%', figsize=(8, 8))
+        plt.title("Attendance Status Distribution")
+
+def save_and_show_plot(name):
+    os.makedirs("plots", exist_ok=True)
+    plt.tight_layout()
+    plt.savefig(f"plots/{name}.png")
+    plt.show()
+    plt.clf()  # Clear figure after saving
+
 def main():
-    loader = DataLoader('sample.csv')
-    data = loader.load_csv()
+    loader = DataLoader("sample_attendance.csv")
+    df = loader.load_csv()
 
-    processor = DataProcessor(data)
-    cleaned_data = processor.remove_duplicates()
+    processor = DataProcessor(df)
+    df = processor.drop_nulls()
+    df = processor.drop_duplicates()
+    df = processor.convert_dtype('Date', 'str')
+    df = processor.convert_dtype('Student', 'str')
+    df = processor.convert_dtype('Status', 'str')
 
-    analyzer = Analyzer(cleaned_data)
-    attendance_summary = analyzer.calculate_attendance_summary()
+    visualizer = Visualizer(df)
 
-    visualizer = Visualizer(cleaned_data)
-    visualizer.plot_attendance_trend()
+    visualizer.plot_daily_attendance('Date', 'Status')
+    save_and_show_plot("daily_attendance")
 
-    report = ReportGenerator(cleaned_data)
-    report.generate_summary_report('summary.txt')
+    visualizer.pie_chart_distribution('Status')
+    save_and_show_plot("status_pie_chart")
 
-    print("Demo completed.")
+    analyzer = Analyzer(df)
+    summary = analyzer.attendance_summary('Status')
+    print(summary)
 
-if __name__ == "__main__":
+    report = ReportGenerator(df)
+    report.generate_summary_report('attendance_summary_report.txt')
+
+if __name__ == '__main__':
     main()

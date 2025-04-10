@@ -5,31 +5,43 @@ class DataProcessor:
         self.df = dataframe
 
     def drop_nulls(self):
-        return self.df.dropna()
+        self.df = self.df.dropna()
+        return self.df
 
-    def fill_nulls(self, value=0):
-        return self.df.fillna(value)
+    def fill_nulls(self, value="Unknown"):
+        self.df = self.df.fillna(value)
+        return self.df
 
     def rename_columns(self, rename_dict):
-        return self.df.rename(columns=rename_dict)
+        self.df = self.df.rename(columns=rename_dict)
+        return self.df
 
-    def filter_rows(self, condition):
-        return self.df.query(condition)
+    def filter_by_status(self, status):
+        return self.df[self.df['Status'] == status]
 
-    def sort_values(self, by, ascending=True):
-        return self.df.sort_values(by=by, ascending=ascending)
+    def get_student_attendance(self, student_id):
+        return self.df[self.df['StudentID'] == student_id]
 
-    def reset_index(self):
-        return self.df.reset_index(drop=True)
+    def attendance_summary(self):
+        return self.df.groupby(['StudentID', 'Name'])['Status'].value_counts().unstack(fill_value=0)
 
-    def set_index(self, column):
-        return self.df.set_index(column)
+    def attendance_percentage(self):
+        summary = self.attendance_summary()
+        summary['Total'] = summary.sum(axis=1)
+        summary['Percentage'] = (summary.get('Present', 0) / summary['Total']) * 100
+        return summary
 
-    def group_by(self, column):
-        return self.df.groupby(column)
+    def sort_by_date(self):
+        self.df['Date'] = pd.to_datetime(self.df['Date'])
+        self.df = self.df.sort_values(by='Date')
+        return self.df
+
+    def unique_students(self):
+        return self.df[['StudentID', 'Name']].drop_duplicates()
 
     def drop_duplicates(self):
-        return self.df.drop_duplicates()
+        self.df = self.df.drop_duplicates()
+        return self.df
 
     def convert_dtype(self, column, dtype):
         self.df[column] = self.df[column].astype(dtype)
