@@ -1,9 +1,11 @@
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from alterpy.visualizer import Visualizer
 import pandas as pd
+from alterpy.visualizer import Visualizer
 
-def test_plot_bar_chart():
-    df = pd.DataFrame({"Student": ["A"], "Present": [5]})
+def test_visualizer_functions(tmp_path):
+    df = pd.DataFrame({
+        "Student": ["A", "B"],
+        "Present": [5, 3]
+    })
     vis = Visualizer(df)
-    vis.bar_chart("Student", "Present")
+    vis.pie_chart("Student", "Present", save_path=str(tmp_path / "pie.png"))
+    vis.bar_chart("Student", "Present", save_path=str(tmp_path / "bar.png"))

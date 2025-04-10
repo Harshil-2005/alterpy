@@ -1,9 +1,10 @@
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from alterpy.report_generator import ReportGenerator
 import pandas as pd
+from alterpy.report_generator import ReportGenerator
 
-def test_generate_pdf():
-    df = pd.DataFrame({"Name": ["A"], "Attendance": [90]})
+def test_generate_pdf(tmp_path):
+    df = pd.DataFrame({
+        "Name": ["A", "B"],
+        "Attendance": [90, 85]
+    })
     rg = ReportGenerator(df)
-    rg.generate_pdf("test_report.pdf")
+    rg.generate_pdf(str(tmp_path / "report.pdf"))

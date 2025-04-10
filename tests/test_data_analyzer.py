@@ -1,10 +1,16 @@
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from alterpy.data_analyzer import Analyzer
 import pandas as pd
+from alterpy.data_analyzer import Analyzer
 
-def test_attendance_percentage():
-    df = pd.DataFrame({"Student": ["A"], "Present": [1]})
+def test_attendance_summary_and_percentage():
+    df = pd.DataFrame({
+        "StudentID": ["1", "1", "2", "2", "2"],
+        "Status": ["Present", "Absent", "Present", "Present", "Absent"],
+        "Date": ["2024-01-01"] * 5
+    })
     analyzer = Analyzer(df)
-    result = analyzer.attendance_percentage("Student", "Present")
-    assert result is None or result is not None
+
+    summary = analyzer.attendance_summary("Status")
+    assert summary.get("Present", 0) == 3
+
+    percent = analyzer.attendance_percentage("StudentID", "Status")
+    assert "Percentage" in percent.columns

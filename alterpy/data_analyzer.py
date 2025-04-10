@@ -8,11 +8,11 @@ class Analyzer:
         return self.df[status_col].value_counts()
 
     def student_attendance_stats(self):
-        return self.df.groupby('Student')['Status'].value_counts().unstack(fill_value=0)
+        return self.df.groupby('StudentID')['Status'].value_counts().unstack(fill_value=0)
 
     def top_absentees(self, n=5):
         absents = self.df[self.df['Status'] == 'Absent']
-        return absents['Student'].value_counts().head(n)
+        return absents['StudentID'].value_counts().head(n)
 
     def attendance_by_day(self):
         return self.df.groupby('Date')['Status'].value_counts().unstack(fill_value=0)
@@ -42,3 +42,12 @@ class Analyzer:
         summary['Total'] = summary.sum(axis=1)
         summary['PresentRate'] = summary.get('Present', 0) / summary['Total']
         return summary.sort_values(by='PresentRate', ascending=True).head(bottom_n)
+
+    def attendance_percentage(self, student_col, status_col):
+        summary = self.df.groupby(student_col)[status_col].value_counts().unstack().fillna(0)
+        summary['Total'] = summary.sum(axis=1)
+        if 'Present' in summary.columns:
+            summary['Percentage'] = (summary['Present'] / summary['Total']) * 100
+        else:
+            summary['Percentage'] = 0
+        return summary

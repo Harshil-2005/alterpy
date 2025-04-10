@@ -1,57 +1,92 @@
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 
 class Visualizer:
-    def __init__(self, df):
-        self.df = df
+    def __init__(self, dataframe):
+        self.df = dataframe
 
-    def plot_daily_bar_chart(self, date_col, status_col):
-        plt.figure()
-        daily = self.df.groupby(date_col)[status_col].value_counts().unstack().fillna(0)
-        daily.plot(kind='bar', stacked=True, figsize=(12, 6))
-        plt.title("Daily Attendance")
-        plt.xlabel("Date")
-        plt.ylabel("Count")
-        self._save("daily_bar_chart")
+    def pie_chart(self, labels_col, values_col, save_path=None, show=False):
+        plt.figure(figsize=(6, 6))
+        plt.pie(self.df[values_col], labels=self.df[labels_col], autopct='%1.1f%%', startangle=140)
+        plt.axis('equal')
+        if save_path:
+            plt.savefig(save_path)
+        if show:
+            plt.show()
+        plt.close()
 
-    def line_chart_trend(self, date_col, status_value_col='Status', value='Present'):
-        plt.figure()
-        trend = self.df[self.df[status_value_col] == value]
-        trend = trend.groupby(date_col).size()
-        trend.plot(kind='line', marker='o', figsize=(12, 5))
-        plt.title(f"{value} Attendance Over Time")
-        plt.xlabel("Date")
-        plt.ylabel("Count")
-        self._save("line_chart_trend")
+    def bar_chart(self, x_col, y_col, title='', save_path=None, show=False):
+        plt.figure(figsize=(8, 5))
+        sns.barplot(data=self.df, x=x_col, y=y_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        if show:
+            plt.show()
+        plt.close()
 
-    def pie_chart_distribution(self, status_col):
-        plt.figure()
-        counts = self.df[status_col].value_counts()
-        counts.plot(kind='pie', autopct='%1.1f%%', figsize=(8, 8))
-        plt.title("Attendance Status Distribution")
-        self._save("pie_chart_distribution")
+    def line_chart(self, x_col, y_col, title='', save_path=None):
+        plt.figure(figsize=(8, 5))
+        sns.lineplot(data=self.df, x=x_col, y=y_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
 
-    def stacked_attendance_by_student(self, student_col, status_col):
-        plt.figure()
-        stacked = self.df.groupby(student_col)[status_col].value_counts().unstack().fillna(0)
-        stacked.plot(kind='bar', stacked=True, figsize=(14, 6))
-        plt.title("Stacked Attendance by Student")
-        plt.xlabel("Student")
-        plt.ylabel("Count")
-        self._save("stacked_by_student")
+    def stacked_bar_chart(self, group_col, status_cols, title='', save_path=None):
+        df_grouped = self.df.groupby(group_col)[status_cols].sum()
+        df_grouped.plot(kind='bar', stacked=True, figsize=(10, 6))
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
 
-    def heatmap_attendance_trend(self, date_col, student_col, status_col):
-        df_filtered = self.df[self.df[status_col] == "Present"]
-        pivot = df_filtered.pivot_table(index=student_col, columns=date_col, aggfunc='size', fill_value=0)
-        plt.figure(figsize=(14, 6))
-        sns.heatmap(pivot, cmap="Greens", linewidths=0.5, linecolor='gray')
-        plt.title("Heatmap of Present Attendance")
-        self._save("heatmap_attendance")
+    def heatmap_attendance(self, pivot_index, pivot_columns, values_col, save_path=None):
+        pivot_table = self.df.pivot_table(index=pivot_index, columns=pivot_columns, values=values_col, aggfunc='count', fill_value=0)
+        plt.figure(figsize=(10, 6))
+        sns.heatmap(pivot_table, annot=True, fmt='d', cmap='YlGnBu')
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
 
-    def _save(self, name):
-        os.makedirs("plots", exist_ok=True)
-        plt.tight_layout()
-        plt.savefig(f"plots/{name}.png")
-        plt.show()
-        plt.clf()
+    def scatter_plot(self, x_col, y_col, title='', save_path=None):
+        plt.figure(figsize=(8, 5))
+        sns.scatterplot(data=self.df, x=x_col, y=y_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
+
+    def histogram(self, col, bins=10, title='', save_path=None):
+        plt.figure(figsize=(8, 5))
+        sns.histplot(self.df[col], bins=bins, kde=True)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
+
+    def box_plot(self, x_col, y_col, title='', save_path=None):
+        plt.figure(figsize=(8, 5))
+        sns.boxplot(data=self.df, x=x_col, y=y_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
+
+    def violin_plot(self, x_col, y_col, title='', save_path=None):
+        plt.figure(figsize=(8, 5))
+        sns.violinplot(data=self.df, x=x_col, y=y_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()
+
+    def attendance_trend_plot(self, date_col, count_col, title='', save_path=None):
+        daily = self.df.groupby(date_col)[count_col].count().reset_index()
+        plt.figure(figsize=(10, 5))
+        sns.lineplot(data=daily, x=date_col, y=count_col)
+        plt.title(title)
+        if save_path:
+            plt.savefig(save_path)
+        plt.close()

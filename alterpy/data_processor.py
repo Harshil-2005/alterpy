@@ -6,15 +6,15 @@ class DataProcessor:
 
     def drop_nulls(self):
         self.df = self.df.dropna()
-        return self.df
+        return self
 
     def fill_nulls(self, value="Unknown"):
         self.df = self.df.fillna(value)
-        return self.df
+        return self
 
     def rename_columns(self, rename_dict):
         self.df = self.df.rename(columns=rename_dict)
-        return self.df
+        return self
 
     def filter_by_status(self, status):
         return self.df[self.df['Status'] == status]
@@ -34,15 +34,18 @@ class DataProcessor:
     def sort_by_date(self):
         self.df['Date'] = pd.to_datetime(self.df['Date'])
         self.df = self.df.sort_values(by='Date')
-        return self.df
+        return self
 
     def unique_students(self):
         return self.df[['StudentID', 'Name']].drop_duplicates()
 
     def drop_duplicates(self):
         self.df = self.df.drop_duplicates()
-        return self.df
+        return self
 
     def convert_dtype(self, column, dtype):
         self.df[column] = self.df[column].astype(dtype)
+        return self
+
+    def get_data(self):
         return self.df

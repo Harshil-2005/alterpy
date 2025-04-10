@@ -5,11 +5,12 @@ class DataLoader:
         self.filepath = filepath
 
     def load_csv(self):
-        try:
-            return pd.read_csv(self.filepath)
-        except Exception as e:
-            print(f"Error loading CSV file: {e}")
-            return None
+        self.df = pd.read_csv(self.filepath)
+        return self.df  # <-- THIS IS IMPORTANT
+
+    def preview_data(self, df, rows=5):
+        return df.head(rows)
+
 
     def load_excel(self):
         try:

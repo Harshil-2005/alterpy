@@ -1,16 +1,51 @@
-Date,Student,Status
-2024-04-01,John Doe,Present
-2024-04-01,Jane Smith,Absent
-2024-04-01,Sam Patel,Late
-2024-04-02,John Doe,Present
-2024-04-02,Jane Smith,Present
-2024-04-02,Sam Patel,Absent
-2024-04-03,John Doe,Late
-2024-04-03,Jane Smith,Present
-2024-04-03,Sam Patel,Present
-2024-04-04,John Doe,Absent
-2024-04-04,Jane Smith,Present
-2024-04-04,Sam Patel,Late
-2024-04-05,John Doe,Present
-2024-04-05,Jane Smith,Absent
-2024-04-05,Sam Patel,Present
+StudentID,Name,Date,Status
+1,A,2024-04-01,Present
+1,A,2024-04-02,Present
+1,A,2024-04-03,Absent
+1,A,2024-04-04,Present
+1,A,2024-04-05,Present
+2,B,2024-04-01,Absent
+2,B,2024-04-02,Present
+2,B,2024-04-03,Present
+2,B,2024-04-04,Absent
+2,B,2024-04-05,Present
+3,C,2024-04-01,Present
+3,C,2024-04-02,Present
+3,C,2024-04-03,Present
+3,C,2024-04-04,Present
+3,C,2024-04-05,Absent
+4,D,2024-04-01,Absent
+4,D,2024-04-02,Absent
+4,D,2024-04-03,Present
+4,D,2024-04-04,Present
+4,D,2024-04-05,Present
+5,E,2024-04-01,Present
+5,E,2024-04-02,Present
+5,E,2024-04-03,Present
+5,E,2024-04-04,Present
+5,E,2024-04-05,Present
+6,F,2024-04-01,Absent
+6,F,2024-04-02,Absent
+6,F,2024-04-03,Absent
+6,F,2024-04-04,Absent
+6,F,2024-04-05,Present
+7,G,2024-04-01,Present
+7,G,2024-04-02,Absent
+7,G,2024-04-03,Absent
+7,G,2024-04-04,Present
+7,G,2024-04-05,Absent
+8,H,2024-04-01,Absent
+8,H,2024-04-02,Absent
+8,H,2024-04-03,Absent
+8,H,2024-04-04,Absent
+8,H,2024-04-05,Absent
+9,I,2024-04-01,Present
+9,I,2024-04-02,Present
+9,I,2024-04-03,Present
+9,I,2024-04-04,Present
+9,I,2024-04-05,Absent
+10,J,2024-04-01,Absent
+10,J,2024-04-02,Present
+10,J,2024-04-03,Absent
+10,J,2024-04-04,Present
+10,J,2024-04-05,Absent

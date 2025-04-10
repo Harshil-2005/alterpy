@@ -1,9 +1,12 @@
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from alterpy.data_loader import DataLoader
 import pandas as pd
+from alterpy.data_loader import DataLoader
 
-def test_load_csv():
-    dl = DataLoader("sample.csv")
-    df = pd.DataFrame({'Name': ['A'], 'Value': [1]})
-    assert not df.empty
+def test_loader_csv(tmp_path):
+    test_csv = tmp_path / "test.csv"
+    df = pd.DataFrame({"Name": ["A", "B"], "Status": ["Present", "Absent"]})
+    df.to_csv(test_csv, index=False)
+
+    loader = DataLoader(str(test_csv))
+    loaded = loader.load_csv()
+    assert loaded is not None
+    assert loaded.shape == (2, 2)
