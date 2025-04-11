@@ -6,7 +6,7 @@ class DataLoader:
 
     def load_csv(self):
         self.df = pd.read_csv(self.filepath)
-        return self.df  # <-- THIS IS IMPORTANT
+        return self.df  
 
     def preview_data(self, df, rows=5):
         return df.head(rows)
